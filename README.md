@@ -32,15 +32,15 @@ You may want to manually alias `yo` to `yocli`, but we don't because of Yeoman.
 $ echo "alias yo='yocli'" >> ~/.bashrc # Or whatever shell you use
 ```
 
-## Options and flags
-This is all available as help and in the man page, but:
+## Commands
+all: Yo all yo subscribers
+subs: Get subscriber count
+init: Redo first run configuration prompt
 
+## Options and flags
 ```
 -k (--key): Use a specific API key (instead of the one in `~/.yoclirc`)
 -u (--url): Yo an image or link
--a (--all): Yo all yo subscribers
--s (--sub): Get subscriber count
--i (--init): Redo first run configuration prompt
 ```
 
 ## Pipe interface

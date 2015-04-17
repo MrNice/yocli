@@ -1,0 +1,25 @@
+{
+  "name": "yocli",
+  "version": "0.0.1",
+  "description": "Unofficial CLI for Yo, supports piping in",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrNice/yocli.git"
+  },
+  "keywords": [
+    "yo",
+    "cli",
+    "justyo",
+    "pipe"
+  ],
+  "author": "Nicholas van de Walle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MrNice/yocli/issues"
+  },
+  "homepage": "https://github.com/MrNice/yocli"
+}

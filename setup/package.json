@@ -1,0 +1,20 @@
+{
+  "name": "yocli-setup",
+  "version": "0.0.1",
+  "description": "The setup process for yocli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "yocli",
+    "yo",
+    "setup",
+    "prompt"
+  ],
+  "author": "Nicholas van de Walle",
+  "license": "MIT",
+  "dependencies": {
+    "prompt": "^0.2.14"
+  }
+}

@@ -24,6 +24,7 @@
   "homepage": "https://github.com/MrNice/yocli",
   "dependencies": {
     "char-spinner": "^1.0.1",
+    "file-exists": "^0.1.1",
     "manual": "0.0.8",
     "nomnom": "^1.8.1",
     "prompt": "^0.2.14",

@@ -1,6 +1,6 @@
 {
   "name": "yocli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Unofficial CLI for Yo, supports piping in",
   "main": "index.js",
   "scripts": {

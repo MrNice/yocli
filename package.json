@@ -29,7 +29,7 @@
     "nomnom": "^1.8.1",
     "prompt": "^0.2.14",
     "ramda": "^0.13.0",
-    "yo-api2": "0.0.1"
+    "yo-api2": "0.0.2"
   },
   "devDependencies": {
     "chai": "^2.2.0",

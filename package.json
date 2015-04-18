@@ -28,11 +28,13 @@
     "manual": "0.0.8",
     "nomnom": "^1.8.1",
     "prompt": "^0.2.14",
-    "ramda": "^0.13.0"
+    "ramda": "^0.13.0",
+    "yo-api2": "0.0.1"
   },
   "devDependencies": {
     "chai": "^2.2.0",
     "mocha": "^2.2.4",
     "standard": "^3.6.1"
-  }
+  },
+  "bin": "./index.js"
 }

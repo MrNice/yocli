@@ -2,7 +2,7 @@ var fs = require('fs');
 var parser     = require('nomnom');
 var fileExists = require('file-exists');
 
-var yoapi = require('yo-api');
+var yoapi = require('yo-api2');
 
 var setup = require('./setup');
 

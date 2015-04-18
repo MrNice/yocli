@@ -1,4 +1,5 @@
-var fs = require('fs');
+#!/usr/bin/env node
+var fs         = require('fs');
 var parser     = require('nomnom');
 var fileExists = require('file-exists');
 

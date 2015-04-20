@@ -23,12 +23,16 @@
   },
   "homepage": "https://github.com/MrNice/yocli",
   "dependencies": {
+    "bluebird": "^2.9.24",
     "char-spinner": "^1.0.1",
     "file-exists": "^0.1.1",
+    "lodash": "^3.7.0",
     "manual": "0.0.8",
     "nomnom": "^1.8.1",
     "prompt": "^0.2.14",
     "ramda": "^0.13.0",
+    "validator": "^3.38.0",
+    "yargs": "^3.7.2",
     "yo-api2": "0.0.2"
   },
   "devDependencies": {

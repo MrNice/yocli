@@ -1,103 +1,99 @@
 #!/usr/bin/env node
+var _          = require('lodash');
 var fs         = require('fs');
-var parser     = require('nomnom');
+var validator  = require('validator');
 var fileExists = require('file-exists');
 
 var yoapi = require('yo-api2');
-
 var setup = require('./setup');
 
 var yoclirc = getUserHome() + '/.yoclirc';
 
-var config;
-var apiKey;
-var commandName = 'yocli';
+var yargs = require('yargs')
+  .usage('Usage: $0 <command> -u [URL] -k [KEY]')
+  .command('<username>', 'Yo this user')
+  .command('all', 'Yo all Yo subscribers')
+  .command('subs', 'Count Yo subscribers')
+  .command('init', 'Rerun initial setup')
+  .config(yoclirc)
+  .help('h')
+  .alias('h', 'help')
+  .option('k', {
+    alias: 'key',
+    demand: false, // We actually do but need prompt first
+    type: 'string',
+    describe: 'API Key to use (get from https://dev.justyo.co/)'
+  })
+  .option('u', {
+    alias: 'url',
+    demand: false,
+    type: 'string',
+    describe: 'URL for link or image to send'
+  })
+  .version(function() {
+    return require('../package').version;
+  })
+  .epilog('Yo');
 
-if (fileExists(yoclirc)) {
-  config = JSON.parse(fs.readFileSync(yoclirc));
-  run(config.apiKey, config.commandName);
-} else {
-  console.log('Please setup yoclirc');
+var argv = yargs.argv;
+
+// Normalize argv for --key and autoload config usages
+if (!fileExists(yoclirc) && !_.isString(argv.k)) {
   // run init prompt
-  setup(yoclirc, function(err, config) {
-    if (err) throw err;
-    fs.writeFileSync(yoclirc, JSON.stringify(config));
-    run(config.apiKey, config.commandName);
-  });
+  setup(yoclirc)
+    .then(function(config) {
+      // Save yoclirc
+      fs.writeFileSync(yoclirc, JSON.stringify(config));
+      // Format argv for run()
+      argv.k = config.apiKey;
+      run(argv);
+    })
+    .catch(function(err) {
+      console.log(err.message);
+      process.exit(1);
+    });
+} else {
+  argv.k = JSON.parse(fs.readFileSync(yoclirc)).apiKey;
+  run(argv);
 }
 
-function run(apiKey, commandName) {
-  var keyData = {
-    abbr: 'k',
-    metavar: 'API_KEY',
-    help: 'use a specific api key'
-  };
-
-  var urlData = {
-    abbr: 'u',
-    metavar: 'URL',
-    help: 'URL link or image to send'
-  };
-  // TODO Change this based on loading json and checking for not manual symlink
-  parser.script(commandName);
-
-  parser.command('yo')
-    .option('key', keyData)
-    .option('url', urlData)
-    .callback(function(opts) {
-      var key = opts.key || apiKey;
-      yoapi(key, opts[1], opts.url)
-        .then(function() {
-          console.log('Yo sent to ' + opts[1]);
+function run(argv) {
+  if (argv.u && !validator.isURL(argv.u)) {
+    console.log('--url Link must be a valid URL'.red);
+    return yargs.showHelp();
+  }
+  if (_.isUndefined(argv._[0])) return yargs.showHelp();
+  switch (argv._[0]) {
+    case 'init':
+      setup(yoclirc)
+        .then(function(config) {
+          fs.writeFileSync(yoclirc, JSON.stringify(config));
+          console.log('All set and ready to go!');
         })
-        .catch(function(err) {
-          console.log(err.message);
-          process.exit(1);
-        });
-    });
-
-  parser.command('all')
-    .option('key', keyData)
-    .option('url', urlData)
-    .callback(function(opts) {
-      var key = opts.key || apiKey;
-      yoapi(key, 'all', opts.url)
-        .then(function() {
-          console.log('Yo sent to all');
-        })
-        .catch(function(err) {
-          console.log(err.message);
-          process.exit(1);
-        });
-    })
-    .help('Yo all Yo subscribers');
-
-  parser.command('subs')
-    .option('key', keyData)
-    .callback(function(opts) {
-      var key = opts.key || apiKey;
-      yoapi.subs(key)
+        .catch(logErrQuit);
+      break;
+    case 'subs':
+      yoapi.subs(argv.k)
         .then(function(responseBody) {
           console.log('Yo have ' + responseBody.count + ' subscribers');
         })
-        .catch(function(err) {
-          console.log(err.message);
-          process.exit(1);
+        .catch(logErrQuit);
+      break;
+    default:
+      var username = argv._[0];
+      yoapi(argv.k, username, argv.u)
+        .then(function() {
+          console.log('Yo sent to ' + username);
         })
-    })
-    .help('Count Yo subscribers');
-
-  parser.command('init')
-    .callback(function(opts) {
-      setup(yoclirc, function(err, config) {
-        fs.writeFileSync(yoclirc, JSON.stringify(config));
-        process.exit(0);
-      });
-    })
-    .help('Rerun initial setup');
-
-  parser.parse();
+        .catch(logErrQuit);
+  }
 }
+
+function logErrQuit(err) {
+  console.log(err.message);
+  process.exit(1);
+}
+
 
 function getUserHome() {
   return process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
